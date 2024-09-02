@@ -4,7 +4,7 @@ import sys
 def send_email(subject, body, to="yvette.halili@telusinternational.com", from_email="no-reply@yourdomain.com"):
     ssmtp_command = "/usr/sbin/ssmtp"
     
-    email_content = f"""From: {from_email}
+    email_content = """From: {from_email}
 MIME-Version: 1.0
 Content-Type: text/html; charset=utf-8
 Subject: {subject}
@@ -16,7 +16,7 @@ Please check <b>susweyak03</b> for more details.<br /><br />
 
 Kind Regards,<br />
 Your Backup System
-"""
+""".format(from_email=from_email, subject=subject, body=body)
     
     try:
         process = subprocess.Popen(ssmtp_command, stdin=subprocess.PIPE, shell=True)
@@ -24,7 +24,7 @@ Your Backup System
         process.stdin.close()
         process.wait()
     except Exception as e:
-        print(f"Failed to send email: {e}")
+        print("Failed to send email: {}".format(e))
 
 if __name__ == "__main__":
     if len(sys.argv) != 3:
