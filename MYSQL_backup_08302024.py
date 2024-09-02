@@ -48,7 +48,10 @@ def send_error_email():
     command = [
         "python3", EMAIL_SCRIPT_PATH, subject, body
     ]
-    subprocess.run(command)
+    try:
+        subprocess.run(command, check=True)
+    except subprocess.CalledProcessError as e:
+        logging.error("Failed to send error email: {}".format(e))
 
 def load_server_list(file_path):
     """Load the server list from a given file."""
