@@ -32,6 +32,13 @@ DB_PWD = config['credentials']['DB_PWD']
 
 EMAIL_SCRIPT_PATH = "/backup/scripts/test_error_backup_email.py"
 
+def sanitize_command(command):
+    """Sanitize the command by replacing sensitive information."""
+    sanitized_command = [
+        arg.replace(DB_USR, "*****").replace(DB_PWD, "*****") if isinstance(arg, str) else arg
+    for arg in command]
+    return sanitized_command
+
 def send_error_email():
     subject = "[ERROR] CloudSQL Backup Error"
     error_lines = []
@@ -100,7 +107,9 @@ def get_database_list(host, use_ssl, server):
 def stream_database_to_gcs(dump_command, gcs_path, db):
     start_time = time.time()
     try:
-        logging.info("Starting dump process: {}".format(" ".join(dump_command)))
+        sanitized_command = sanitize_command(dump_command)
+        logging.info("Starting dump process: {}".format(" ".join(sanitized_command)))
+        
         # Start the dump process
         dump_proc = subprocess.Popen(dump_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         logging.info("Starting gzip process")
@@ -169,7 +178,8 @@ def main():
                         "--ssl-key={}".format(os.path.join(SSL_PATH, SERVER, "client-key.pem")),
                         "--ssl-mode=VERIFY_CA"
                     ]
-                logging.info("Dump command: {}".format(" ".join(dump_command)))
+                sanitized_command = sanitize_command(dump_command)
+                logging.info("Dump command: {}".format(" ".join(sanitized_command)))
                 stream_database_to_gcs(dump_command, gcs_path, db)
         except Exception as e:
             logging.error("Error processing server {}: {}".format(SERVER, e))
