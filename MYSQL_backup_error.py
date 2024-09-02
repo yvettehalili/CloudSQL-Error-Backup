@@ -1,7 +1,7 @@
 import subprocess
 import sys
 
-def send_email(subject, body, to="yvette.halili@telusinternational.com", from_email="no-reply@yourdomain.com"):
+def send_email(subject, body, to="yvette.halili@telusinternational.com", from_email="no-reply@telusinternational.com"):
     ssmtp_command = "/usr/sbin/ssmtp"
     
     email_content = """To: {to}
@@ -18,14 +18,22 @@ Please check <b>susweyak03</b> for more details.<br /><br />
 Kind Regards,<br />
 Your Backup System
 """.format(to=to, from_email=from_email, subject=subject, body=body)
-    
+
     try:
-        process = subprocess.Popen(ssmtp_command, stdin=subprocess.PIPE, shell=True)
-        process.stdin.write(email_content.encode('utf-8'))
-        process.stdin.close()
-        process.wait()
+        # Log the email content for debugging
+        with open('/backup/logs/email_content.log', 'w') as f:
+            f.write(email_content)
+        
+        # Use subprocess.Popen without shell=True and pass the recipient correctly
+        process = subprocess.Popen([ssmtp_command, to], stdin=subprocess.PIPE)
+        process.communicate(input=email_content.encode('utf-8'))
+        
+        if process.returncode != 0:
+            raise Exception("SSMTP process failed with return code {}".format(process.returncode))
+        
+        print("Email sent successfully")
     except Exception as e:
-        print("Failed to send email: {}".format(e))
+        print(f"Failed to send email: {e}")
         with open('/backup/logs/email_error.log', 'a') as f:
             f.write(str(e) + '\n')
 
