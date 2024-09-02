@@ -28,7 +28,7 @@ Your Backup System
 
 if __name__ == "__main__":
     if len(sys.argv) != 3:
-        print("Usage: MYSQL_backup_error.py <subject> <body>")
+        print("Usage: test_error_backup_email.py <subject> <body>")
         sys.exit(1)
 
     subject = sys.argv[1]
