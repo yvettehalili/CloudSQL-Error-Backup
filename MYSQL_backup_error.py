@@ -33,7 +33,7 @@ Your Backup System
         
         print("Email sent successfully")
     except Exception as e:
-        print(f"Failed to send email: {e}")
+        print("Failed to send email: {}".format(e))
         with open('/backup/logs/email_error.log', 'a') as f:
             f.write(str(e) + '\n')
 
