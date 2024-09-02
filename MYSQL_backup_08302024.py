@@ -30,7 +30,7 @@ config.read(CREDENTIALS_PATH)
 DB_USR = config['credentials']['DB_USR']
 DB_PWD = config['credentials']['DB_PWD']
 
-EMAIL_SCRIPT_PATH = "/backup/scripts/MYSQL_backup_error.py"
+EMAIL_SCRIPT_PATH = "/backup/scripts/test_error_backup_email.py"
 
 def send_error_email():
     subject = "[ERROR] CloudSQL Backup Error"
