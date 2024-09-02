@@ -36,4 +36,4 @@ if __name__ == "__main__":
 
     subject = sys.argv[1]
     body = sys.argv[2]
-    send_email(subject, body)
+    send_email(subject, body, to="yvette.halili@telusinternational.com")
