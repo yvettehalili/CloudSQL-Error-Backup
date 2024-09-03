@@ -32,7 +32,7 @@ We encountered an issue during the backup process:<br /><br />
 <pre>{body}</pre><br /><br />
 Please check <b>susweyak03</b> for more details.<br /><br />
 Best regards,<br />
-The Backup System Team
+susweyak03
 """.format(to=to, from_email=from_email, subject=subject, body=highlighted_body)
 
     try:
