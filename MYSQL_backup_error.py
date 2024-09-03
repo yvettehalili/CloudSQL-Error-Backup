@@ -10,9 +10,10 @@ def sanitize_body(body):
     return body
 
 def highlight_error(body):
-    error_line = re.search(r"(ERROR 2003 \(HY000\): Can't connect to MySQL server on '[^']+' \(\d+\))", body)
-    if error_line:
-        body = body.replace(error_line.group(1), "<span style='color:red;font-weight:bold;'>{}</span>".format(error_line.group(1)))
+    # Highlight any line that starts with "ERROR"
+    error_lines = re.findall(r"^(ERROR.*)$", body, re.MULTILINE)
+    for error in error_lines:
+        body = body.replace(error, "<span style='color:#b22222;font-weight:bold;'>{}</span>".format(error))
     return body
 
 def send_email(subject, body, to="yvette.halili@telusinternational.com", from_email="no-reply@telusinternational.com"):
@@ -27,10 +28,10 @@ MIME-Version: 1.0
 Content-Type: text/html; charset=utf-8
 Subject: {subject}
 
-Dear DBA Team,<br /><br />
+Hi DBA Team,<br /><br />
 We encountered an issue during the backup process:<br /><br />
 <pre>{body}</pre><br /><br />
-Please check <b>susweyak03</b> for more details.<br /><br />
+<span style="color:#333333;">Please check <b>susweyak03</b> for more details.</span><br /><br />
 Best regards,<br />
 susweyak03
 """.format(to=to, from_email=from_email, subject=subject, body=highlighted_body)
