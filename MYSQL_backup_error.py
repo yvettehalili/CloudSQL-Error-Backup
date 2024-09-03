@@ -16,7 +16,7 @@ def highlight_error(body):
         body = body.replace(error, "<span style='font-weight:bold;'>{}</span>".format(error))
     return body
 
-def send_email(subject, body, to="yvette.halili@telusinternational.com", from_email="no-reply@telusinternational.com"):
+def send_email(subject, body, to="dba@telusinternational.com", from_email="no-reply@telusinternational.com"):
     ssmtp_command = "/usr/sbin/ssmtp"
 
     sanitized_body = sanitize_body(body)
@@ -28,7 +28,7 @@ MIME-Version: 1.0
 Content-Type: text/html; charset=utf-8
 Subject: {subject}
 
-Dear DBA Team,<br /><br />
+Hi DBA Team,<br /><br />
 We encountered an issue during the backup process:<br /><br />
 <pre>{body}</pre><br /><br />
 Please check <b>susweyak03</b> for more details.<br /><br />
@@ -61,4 +61,4 @@ if __name__ == "__main__":
 
     subject = sys.argv[1]
     body = sys.argv[2]
-    send_email(subject, body, to="yvette.halili@telusinternational.com")
+    send_email(subject, body, to="dba@telusinternational.com")
