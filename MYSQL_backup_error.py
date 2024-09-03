@@ -10,10 +10,10 @@ def sanitize_body(body):
     return body
 
 def highlight_error(body):
-    # Highlight any line that starts with "ERROR"
+    # Emphasize any line that starts with "ERROR" by making it bold
     error_lines = re.findall(r"^(ERROR.*)$", body, re.MULTILINE)
     for error in error_lines:
-        body = body.replace(error, "<span style='color:red;font-weight:bold;'>{}</span>".format(error))
+        body = body.replace(error, "<span style='font-weight:bold;'>{}</span>".format(error))
     return body
 
 def send_email(subject, body, to="yvette.halili@telusinternational.com", from_email="no-reply@telusinternational.com"):
@@ -28,7 +28,7 @@ MIME-Version: 1.0
 Content-Type: text/html; charset=utf-8
 Subject: {subject}
 
-Dear Team,<br /><br />
+Dear DBA Team,<br /><br />
 We encountered an issue during the backup process:<br /><br />
 <pre>{body}</pre><br /><br />
 Please check <b>susweyak03</b> for more details.<br /><br />
