@@ -9,10 +9,17 @@ def sanitize_body(body):
     body = re.sub(r"-p\S+ ", "-p*** ", body)   # Hide password
     return body
 
+def highlight_error(body):
+    error_line = re.search(r"(ERROR 2003 \(HY000\): Can't connect to MySQL server on '[^']+' \(\d+\))", body)
+    if error_line:
+        body = body.replace(error_line.group(1), "<span style='color:red;font-weight:bold;'>{}</span>".format(error_line.group(1)))
+    return body
+
 def send_email(subject, body, to="yvette.halili@telusinternational.com", from_email="no-reply@telusinternational.com"):
     ssmtp_command = "/usr/sbin/ssmtp"
 
     sanitized_body = sanitize_body(body)
+    highlighted_body = highlight_error(sanitized_body)
     
     email_content = """To: {to}
 From: {from_email}
@@ -20,14 +27,13 @@ MIME-Version: 1.0
 Content-Type: text/html; charset=utf-8
 Subject: {subject}
 
-Hi DBA Team,<br /><br />
-We encountered a bit of a hiccup during the backup process:<br /><br />
-<span style="color:red;">{body}</span><br /><br />
+Dear DBA Team,<br /><br />
+We encountered an issue during the backup process:<br /><br />
+<pre>{body}</pre><br /><br />
 Please check <b>susweyak03</b> for more details.<br /><br />
-
-Kind Regards,<br />
-susweyak03
-""".format(to=to, from_email=from_email, subject=subject, body=sanitized_body)
+Best regards,<br />
+The Backup System Team
+""".format(to=to, from_email=from_email, subject=subject, body=highlighted_body)
 
     try:
         # Log the email content for debugging
